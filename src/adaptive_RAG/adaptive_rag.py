@@ -2,7 +2,8 @@
 
 from src.retrievers.retrieval_pipeline import RetrievalPipeline
 from src.generation.active_retrieval_generation import ActiveRetrievalGeneration
-from src.utils import evaluate_relevance  # Placeholder for relevance evaluation function
+from src.utils import evaluate_relevance
+from config import SIMILARITY_THRESHOLD
 
 class AdaptiveRAG:
     def __init__(self, retrieval_method='RAG-Fusion'):
@@ -10,9 +11,10 @@ class AdaptiveRAG:
         self.active_generation = ActiveRetrievalGeneration(retrieval_method)
 
     def adapt_retrieval(self, question, initial_docs):
-        # Placeholder logic for adapting retrieval
+        # Evaluate relevance
         relevance_scores = evaluate_relevance(question, initial_docs)
-        if sum(relevance_scores) / len(relevance_scores) < 0.7:  # Example threshold
+        average_relevance = sum(relevance_scores) / len(relevance_scores) if relevance_scores else 0
+        if average_relevance < SIMILARITY_THRESHOLD:  # Example threshold
             # Enhance retrieval parameters
             enhanced_docs = self.retrieval_pipeline.retrieve(question, top_k=10)
             return enhanced_docs

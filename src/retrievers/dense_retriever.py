@@ -1,10 +1,12 @@
+# src/retrievers/dense_retriever.py
+
 from sentence_transformers import SentenceTransformer, util
 import pickle
-from config import DENSE_INDEX_PATH, DENSE_RETRIEVER_MODEL
+from config import DENSE_INDEX_PATH
 from src.utils import load_pickle
 
 class DenseRetriever:
-    def __init__(self, model_name=DENSE_RETRIEVER_MODEL, index_path=DENSE_INDEX_PATH):
+    def __init__(self, model_name='sentence-transformers/all-MiniLM-L6-v2', index_path=DENSE_INDEX_PATH):
         self.model = SentenceTransformer(model_name)
         self.corpus = []
         self.corpus_embeddings = None

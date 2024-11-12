@@ -3,6 +3,7 @@
 from src.retrievers.retrieval_pipeline import RetrievalPipeline
 from src.retrievers.crag import CRAG
 from src.generation.active_retrieval_generation import ActiveRetrievalGeneration
+from config import LLM_MODEL_NAME
 
 class cRAG:
     def __init__(self, retrieval_method='RAG-Fusion'):

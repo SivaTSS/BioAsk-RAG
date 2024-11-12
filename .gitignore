@@ -2,4 +2,3 @@ data
 repo*
 .ipynb*
 *.pyc
-src/databases/__pycache__/relational_db.cpython-312.pyc

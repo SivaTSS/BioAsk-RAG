@@ -2,10 +2,10 @@
 
 from sentence_transformers import SentenceTransformer, util
 import numpy as np
-import os
+from config import SEMANTIC_PROMPT_TEMPLATES
 
 class SemanticRouter:
-    def __init__(self, prompt_templates):
+    def __init__(self, prompt_templates=SEMANTIC_PROMPT_TEMPLATES):
         self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
         self.prompt_templates = prompt_templates
         self.prompt_embeddings = self.model.encode(prompt_templates, convert_to_tensor=True)

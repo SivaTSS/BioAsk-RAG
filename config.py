@@ -32,4 +32,17 @@ SEMANTIC_PROMPT_TEMPLATES = [
     "Retrieve from Vector DB"
 ]
 
+# Retriever Models
 DENSE_RETRIEVER_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'  # Example model, replace as needed
+
+# Embedding Models
+SPECIALIZED_EMBEDDING_MODEL = 'bert-base-nli-mean-tokens'  # Example specialized embedding model
+
+# RAPTOR Configuration
+RAPTOR_LEVELS = 3  # Number of abstraction levels for RAPTOR
+
+# Generation Models
+GENERATION_MODEL_NAME = 'facebook/opt-350m'  # Replace with a suitable open-source model
+
+# Additional Configurations
+SIMILARITY_THRESHOLD = 0.7  # Example threshold for relevance

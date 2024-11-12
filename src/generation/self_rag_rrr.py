@@ -1,16 +1,16 @@
 # src/generation/self_rag_rrr.py
 
 from langchain_community.llms import HuggingFacePipeline
-
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 from src.retrievers.retrieval_pipeline import RetrievalPipeline
 import os
 import torch
+from config import GENERATION_MODEL_NAME
 
 class SelfRAG_RRR:
     def __init__(self, retrieval_method='RAG-Fusion'):
         self.retrieval_pipeline = RetrievalPipeline(method=retrieval_method)
-        model_name = 'facebook/opt-350m'  # Replace with a suitable open-source model
+        model_name = os.getenv('GENERATION_MODEL_NAME', GENERATION_MODEL_NAME)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
         self.llm = HuggingFacePipeline(

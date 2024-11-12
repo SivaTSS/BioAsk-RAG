@@ -1,18 +1,20 @@
 # src/query_translation/translator.py
 
 from langchain_community.llms import HuggingFacePipeline
-
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import os
 import torch
+from config import LLM_MODEL_NAME
 
 class QueryTranslator:
     def __init__(self, technique="Decomposition"):
         self.technique = technique
-        model_name = 'facebook/opt-350m'  # Replace with a suitable open-source LLM
+        model_name = os.getenv('LLM_MODEL_NAME', LLM_MODEL_NAME)  # Use config
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.llm = HuggingFacePipeline(pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1))
+        self.llm = HuggingFacePipeline(
+            pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
+        )
         self.prompt_templates = {
             "Decomposition": "Break down the following question into simpler sub-questions:\n\nQuestion: {question}\nSub-questions:",
             "RAG-Fusion": "Translate the following question into a form optimized for retrieval:\n\nQuestion: {question}\nTranslated Query:",
@@ -28,7 +30,7 @@ class QueryTranslator:
         translated_output = self.llm(prompt, max_length=150)[0]['generated_text']
         # Extract the translated part after the prompt's label
         if self.technique == "Decomposition":
-            return translated_output.split("Sub-questions:")[-1].strip()
+            return translated_output.split("Sub-questions:")[-1].strip().split('\n')
         elif self.technique == "RAG-Fusion":
             return translated_output.split("Translated Query:")[-1].strip()
         elif self.technique == "Multi-query":
