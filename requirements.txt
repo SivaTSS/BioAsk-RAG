@@ -1,0 +1,11 @@
+transformers
+langchain
+gradio
+langchain_community
+torch
+sentencepiece
+seaborn
+sqlalchemy
+py2cypher
+faiss-cpu
+networkx
