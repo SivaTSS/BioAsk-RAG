@@ -31,3 +31,5 @@ SEMANTIC_PROMPT_TEMPLATES = [
     "Retrieve from Graph DB",
     "Retrieve from Vector DB"
 ]
+
+DENSE_RETRIEVER_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'  # Example model, replace as needed

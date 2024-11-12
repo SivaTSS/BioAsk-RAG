@@ -1,8 +1,9 @@
 # src/generation/active_retrieval_generation.py
 
-from langchain.llms import HuggingFacePipeline
+from langchain_community.llms import HuggingFacePipeline
+
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
-from .retrieval_pipeline import RetrievalPipeline
+from src.retrievers.retrieval_pipeline import RetrievalPipeline
 import os
 import torch
 

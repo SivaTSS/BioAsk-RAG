@@ -1,6 +1,7 @@
 # src/indexing/raptor.py
 
-from langchain.llms import HuggingFacePipeline
+from langchain_community.llms import HuggingFacePipeline
+
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 import os
 import torch

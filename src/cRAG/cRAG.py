@@ -1,8 +1,8 @@
-# src/cRAG/cRAG.py
+# src/crag/crag.py
 
-from .retrieval_pipeline import RetrievalPipeline
-from .crag import CRAG
-from .generation.active_retrieval_generation import ActiveRetrievalGeneration
+from src.retrievers.retrieval_pipeline import RetrievalPipeline
+from src.retrievers.crag import CRAG
+from src.generation.active_retrieval_generation import ActiveRetrievalGeneration
 
 class cRAG:
     def __init__(self, retrieval_method='RAG-Fusion'):

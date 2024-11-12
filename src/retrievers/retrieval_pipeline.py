@@ -1,7 +1,5 @@
 # src/retrievers/retrieval_pipeline.py
 
-from .dense_retriever import DenseRetriever
-from .sparse_retriever import SparseRetriever
 from .rerank import ReRanker
 from .rankgpt import RankGPT
 from .rag_fusion import RAGFusion
@@ -10,8 +8,6 @@ from .active_retrieval import ActiveRetrieval
 
 class RetrievalPipeline:
     def __init__(self, method='RAG-Fusion'):
-        self.dense_retriever = DenseRetriever()
-        self.sparse_retriever = SparseRetriever()
         self.reranker = ReRanker()
         self.rankgpt = RankGPT()
         self.rag_fusion = RAGFusion()

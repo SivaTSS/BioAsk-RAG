@@ -6,6 +6,6 @@ torch
 sentencepiece
 seaborn
 sqlalchemy
-py2cypher
 faiss-cpu
 networkx
+neo4j

@@ -16,9 +16,9 @@ from src.retrievers.active_retrieval import ActiveRetrieval
 from src.indexing.indexing_pipeline import IndexingPipeline
 from src.generation.active_retrieval_generation import ActiveRetrievalGeneration
 from src.generation.self_rag_rrr import SelfRAG_RRR
-from src.cRAG.cRAG import cRAG
+from src.crag.crag import cRAG
 from src.adaptive_RAG.adaptive_rag import AdaptiveRAG
-from config import RAG_VARIANTS, QUERY_TRANSLATION_TECHNIQUES, SEMANTIC_PROMPT_TEMPLATES
+from config import QUERY_TRANSLATION_TECHNIQUES, SEMANTIC_PROMPT_TEMPLATES
 
 def load_components():
     # Initialize databases
@@ -132,7 +132,6 @@ iface = gr.Interface(
     title="Comprehensive RAG Question Answering",
     description="A sophisticated Question Answering system leveraging Retrieval-Augmented Generation (RAG) with advanced Retrieval, Indexing, and Generation techniques. Select various methods to explore different configurations and their performance.",
     theme="default",
-    layout="vertical",
     examples=[
         ["What are the records in the Sales table?", "Decomposition", "Logical Routing", "Retrieval Pipeline", "Active Retrieval Generation"],
         ["Show the relationships between users and products.", "RAG-Fusion", "Semantic Routing", "CRAG", "Self-RAG-RRR"],
@@ -150,7 +149,7 @@ iface = gr.Interface(
         color: white;
         border-radius: 5px;
     }
-    """
+"""
 )
 
 if __name__ == "__main__":

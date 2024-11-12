@@ -1,6 +1,7 @@
 # src/query_translation/translator.py
 
-from langchain.llms import HuggingFacePipeline
+from langchain_community.llms import HuggingFacePipeline
+
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import os
 import torch

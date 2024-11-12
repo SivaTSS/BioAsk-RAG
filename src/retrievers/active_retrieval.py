@@ -1,7 +1,7 @@
 # src/retrievers/active_retrieval.py
 
 from .dense_retriever import DenseRetriever
-from .vector_db import VectorDB
+from src.databases.vector_db import VectorDB
 
 class ActiveRetrieval:
     def __init__(self):

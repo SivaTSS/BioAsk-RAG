@@ -1,8 +1,8 @@
 # src/adaptive_RAG/adaptive_rag.py
 
-from .retrieval_pipeline import RetrievalPipeline
-from .generation.active_retrieval_generation import ActiveRetrievalGeneration
-from .utils import evaluate_relevance  # Placeholder for relevance evaluation function
+from src.retrievers.retrieval_pipeline import RetrievalPipeline
+from src.generation.active_retrieval_generation import ActiveRetrievalGeneration
+from src.utils import evaluate_relevance  # Placeholder for relevance evaluation function
 
 class AdaptiveRAG:
     def __init__(self, retrieval_method='RAG-Fusion'):
