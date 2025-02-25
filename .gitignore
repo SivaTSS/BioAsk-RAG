@@ -1,4 +1,4 @@
-data
 repo*
 .ipynb*
 *.pyc
+*keys.json

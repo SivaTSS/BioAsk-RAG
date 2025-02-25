@@ -1,0 +1,119 @@
+import os
+import sys
+import json
+import torch
+from langchain.docstore.document import Document
+from langchain.chains import RetrievalQA
+from langchain_community.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
+from langchain.prompts import PromptTemplate
+from transformers import pipeline
+
+def initialize_llm():
+    # Set device to -1 to force CPU usage
+    device = 0 if torch.cuda.is_available() else -1
+    print("Initializing local language model using HuggingFacePipeline (google/flan-t5-base) on CPU...")
+    pipe = pipeline(
+        "text2text-generation",
+        model="google/flan-t5-base",
+        device=device,
+        max_new_tokens=100,  # Adjust for longer outputs if needed
+    )
+    llm = HuggingFacePipeline(pipeline=pipe)
+    print("Local language model initialized.")
+    return llm
+
+def load_vectorstore(embeddings, save_dir="../vector_store"):
+    print(f"Loading vector store from directory: {save_dir}")
+    vectorstore = FAISS.load_local(save_dir, embeddings=embeddings, allow_dangerous_deserialization=True)
+    print("Vector store loaded successfully.")
+    return vectorstore
+
+def load_all_questions(file_path="../data/BioASQ-train-factoid-6b-full-annotated.json"):
+    print("Loading questions from dataset:", file_path)
+    questions = []
+    try:
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error loading dataset: {e}")
+        return questions
+
+    # Collect all questions along with their ground-truth answers.
+    for entry in data.get('data', []):
+        for paragraph in entry.get('paragraphs', []):
+            for qa in paragraph.get('qas', []):
+                question = qa.get('question')
+                if question:
+                    questions.append((question, qa.get('answers')))
+    print(f"Loaded {len(questions)} questions from dataset.")
+    return questions
+
+def main():
+    # Initialize embeddings for the vector store.
+    print("Initializing embeddings using HuggingFaceEmbeddings (all-mpnet-base-v2)...")
+    embeddings = HuggingFaceEmbeddings(model_name="all-mpnet-base-v2")
+    
+    # Load the vector store and create a retriever.
+    vectorstore = load_vectorstore(embeddings)
+    print("Initializing retriever with top 3 search results...")
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+    
+    # Initialize the CPU-friendly language model.
+    llm = initialize_llm()
+    
+    # Define a custom prompt template that uses context to answer the question.
+    prompt_template = """You are a helpful assistant.
+Use the following context to answer the question.
+If the answer is not contained in the context, say "I don't know."
+Context:
+{context}
+Question: {question}
+Answer:"""
+    QA_PROMPT = PromptTemplate(
+        template=prompt_template,
+        input_variables=["context", "question"]
+    )
+    
+    # Build the RetrievalQA chain (RAG) using the custom prompt.
+    print("Building the RetrievalQA chain with custom prompt for RAG...")
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm, 
+        chain_type="stuff", 
+        retriever=retriever,
+        chain_type_kwargs={"prompt": QA_PROMPT}
+    )
+    
+    # Determine the questions to answer.
+    questions = []
+    if len(sys.argv) > 1:
+        # If a question is provided via command-line, use it.
+        questions.append((" ".join(sys.argv[1:]), None))
+        print("Using provided question:", questions[0][0])
+    else:
+        # Otherwise, load all questions and select every 100th question (up to 3).
+        all_questions = load_all_questions()
+        if all_questions:
+            selected = all_questions[::100][:3]
+            questions.extend(selected)
+            print("Using selected questions from dataset:")
+            for idx, (q, gt) in enumerate(questions, start=1):
+                print(f"{idx}. Question: {q}")
+                print(f"   Ground Truth: {gt}")
+        else:
+            user_q = input("Enter your question: ")
+            questions.append((user_q, None))
+    
+    print("\n--- Running Retrieval-Augmented Generation (RAG) ---")
+    for question, ground_truth in questions:
+        # The RAG chain will automatically retrieve context and generate an answer.
+        answer = qa_chain.invoke(question)
+        print("\n===================================")
+        print("Question:", question)
+        print("Generated Answer:", answer)
+        if ground_truth:
+            print("Ground Truth:", ground_truth)
+        print("===================================\n")
+
+if __name__ == "__main__":
+    main()
