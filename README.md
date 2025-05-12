@@ -49,7 +49,7 @@ The system utilizes the following key components:
      python src/prepare_vectorstore.py
      ```
 
-5. **Set Up Databases (Optional)**
+5. **Set Up Databases (to provide required context for RAG)**
 
    If you plan to extend the system with relational or graph databases, set up the respective databases and adjust the configuration accordingly.
 

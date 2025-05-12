@@ -17,7 +17,7 @@ def initialize_llm():
         "text2text-generation",
         model="google/flan-t5-base",
         device=device,
-        max_new_tokens=100,  # Adjust for longer outputs if needed
+        max_new_tokens=100,
     )
     llm = HuggingFacePipeline(pipeline=pipe)
     print("Local language model initialized.")
